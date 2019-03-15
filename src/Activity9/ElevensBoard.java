@@ -57,6 +57,10 @@ public class ElevensBoard extends Board {
     public boolean isLegal(List<Integer> selectedCards) {
         if (selectedCards.size()==2){
             return containsPairSum11(selectedCards);
+        } else if (selectedCards.size() == 3) {
+        return containsJQK(selectedCards);
+    } else {
+            return false;
         }
     }
 
@@ -71,7 +75,7 @@ public class ElevensBoard extends Board {
     @Override
     public boolean anotherPlayIsPossible() {
         List<Integer> cIndexes = cardIndexes();
-		if (containsPairSum11(cIndexes) && containsJQK(cIndexes)){
+		if (containsPairSum11(cIndexes) || containsJQK(cIndexes)){
 		    return true;
         }
         return false;
@@ -88,13 +92,14 @@ public class ElevensBoard extends Board {
     private boolean containsPairSum11(List<Integer> selectedCards) {
 		for(int c1 = 0; c1 < selectedCards.size(); c1++){
 		    int c1v = selectedCards.get(c1).intValue();
-		    for(int c2; c2 < selectedCards.size()-c1; c2++){
+		    for(int c2 = c1 + 1; c2 < selectedCards.size()-c1; c2++){
                 int c2v = selectedCards.get(c2).intValue();
                 if (cardAt(c1v).pointValue() + cardAt(c2v).pointValue() == 11) {
                     return true;
                 }
             }
         }
+        return false;
 }
 
     /**
@@ -106,6 +111,20 @@ public class ElevensBoard extends Board {
      *              include a jack, a queen, and a king; false otherwise.
      */
     private boolean containsJQK(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+        boolean foundJack = false;
+        boolean foundQueen = false;
+        boolean foundKing = false;
+        for (Integer kObj : selectedCards) {
+            int k = kObj.intValue();
+            if (cardAt(k).rank().equals("jack")) {
+                foundJack = true;
+            } else if (cardAt(k).rank().equals("queen")) {
+                foundQueen = true;
+            } else if (cardAt(k).rank().equals("king")) {
+                foundKing = true;
+            }
+        }
+        return foundJack && foundQueen && foundKing;
+    }
     }
 }
